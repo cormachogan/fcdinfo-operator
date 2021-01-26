@@ -57,7 +57,7 @@ If you are interested in learning more about Golang basics, I found [this site](
 
 ## Step 2 - KubeBuilder Scaffolding ##
 
-The CRD is built using [kubebuilder](https://go.kubebuilder.io/).  I'm not going to spend a great deal of time talking about __KubeBuilder__. Suffice to say that KubeBuilder builds a directory structure containing all of the templates (or scaffolding) necessary for the creation of CRDs. Once this scaffolding is in place, this turorial will show you how to add your own specification fields and status fields, as well as how to add your own operator logic. In this example, our logic will login to vSphere, query and return FCD information  via a Kubernetes CR / object / Kind called HostInfo, the values of which will be used to populate status fields in our CRs.
+The CRD is built using [kubebuilder](https://go.kubebuilder.io/).  I'm not going to spend a great deal of time talking about __KubeBuilder__. Suffice to say that KubeBuilder builds a directory structure containing all of the templates (or scaffolding) necessary for the creation of CRDs. Once this scaffolding is in place, this turorial will show you how to add your own specification fields and status fields, as well as how to add your own operator logic. In this example, our logic will login to vSphere, query and return FCD information  via a Kubernetes CR / object / Kind called FCDInfo, the values of which will be used to populate status fields in our CRs.
 
 The following steps will create the scaffolding to get started.
 
@@ -155,7 +155,7 @@ type FCDInfoSpec struct {
         // INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
         // Important: Run "make" to regenerate code after modifying this file
 
-        // Foo is an example field of FCDInfo. Edit HostInfo_types.go to remove/update
+        // Foo is an example field of FCDInfo. Edit FCDInfo_types.go to remove/update
         Foo string `json:"foo,omitempty"`
 }
 
@@ -308,7 +308,7 @@ spec:
   pvId:  pvc-e3f6dd59-cbc0-49a7-97c8-d92a26732c43
 ```
 
-To see if it works, we need to create this HostInfo Custom Resource.
+To see if it works, we need to create this FCDInfo Custom Resource.
 
 ```shell
 $ kubectl create -f topology_v1_fcdinfo.yaml
@@ -520,7 +520,7 @@ func (r *FCDInfoReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 }
 ```
 
-Considering the business logic that I described above, this is what my updated __FCDInfoReconciler__ function looks like. Hopefully the comments make is easy to understand, but at the end of the day, when this controller gets a reconcile request (something as simple as a get command will trigger this), the status fields of the Custom Resource are updated with the  FCD information from the PV specified in the spec.pvId field. Note that I have omitted a number of required imports that also need to be added to the controller. Refer to the code for the complete [__hostinfo_controller.go__](./controllers/hostinfo_controller.go) code.
+Considering the business logic that I described above, this is what my updated __FCDInfoReconciler__ function looks like. Hopefully the comments make is easy to understand, but at the end of the day, when this controller gets a reconcile request (something as simple as a get command will trigger this), the status fields of the Custom Resource are updated with the  FCD information from the PV specified in the spec.pvId field. Note that I have omitted a number of required imports that also need to be added to the controller. Refer to the code for the complete [__fcdinfo_controller.go__](./controllers/fcdinfo_controller.go) code.
 
 First, lets look at the modified FCDInfoReconciler structure, which now has 2 new members representing the different clients, VC1 and VC2.
 
@@ -882,9 +882,9 @@ I0126 09:33:29.856533       1 leaderelection.go:252] successfully acquired lease
 2021-01-26T09:33:31.530Z        DEBUG   controller-runtime.controller   Successfully Reconciled {"controller": "fcdinfo", "request": "default/fcdinfo-sample"}
 ```
 
-### Step 10.4 - Check if CPU statistics are returned in the status ###
+### Step 10.4 - Check if FCD/PV statistics are returned in the status ###
 
-Last but not least, let's see if we can see the CPU information in the __status__ fields of the HostInfo object created earlier.
+Last but not least, let's see if we can see the FCD/PV information in the __status__ fields of the FCDInfo object created earlier.
 
 ```yaml
 $ kubectl get fcd fcdinfo-sample -o yaml
