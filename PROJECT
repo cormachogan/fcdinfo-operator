@@ -1,0 +1,7 @@
+domain: corinternal.com
+repo: fcdinfo
+resources:
+- group: topology
+  kind: FCDInfo
+  version: v1
+version: "2"
