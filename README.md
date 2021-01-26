@@ -367,10 +367,9 @@ This appears to be working as expected. However there are no __Status__ fields d
 
 ### Step 6.1 - Open a session to vSphere ###
 
-__Note:__ Let's first look at the login function which resides in __main.go__. This __vlogin__ function creates the vSphere session in main.go. One thing to note is that I am enabling insecure logins (true) by default. This is something that you may wish to change in your code. One other item to note is that I am testing two different client logins here, govmomi.Client and vim25.Client. The govmomi.Client uses Finder for getting vsphere information, and treats the vSphere inventory as a virtual filesystem. The vim25.Client uses ContainerView, and tends to generate more response data. As mentioned, this is a tutorial, so this operator shows both login types simply for informational purposes.
+__Note:__ Let's first look at the login function which resides in __main.go__. This __vlogin__ function creates the vSphere session in main.go. One thing to note is that I am enabling insecure logins (true) by default. This is something that you may wish to change in your code. One other item to note is that I am testing two different client logins here, __govmomi.Client__ and __vim25.Client__. The govmomi.Client uses __Finder__ for getting vSphere information, and treats the vSphere inventory as a virtual filesystem. The vim25.Client uses __ContainerView__, and tends to generate more response data. As mentioned, this is a tutorial, so this operator shows both login types simply for informational purposes. Most likely, you could achieve the same results using a single login client.
 
 ```go
-
 //
 // - vSphere session login function
 //
